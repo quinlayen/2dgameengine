@@ -21,14 +21,20 @@ void Game::Initialize()
         return;
     }
  
+    //sets fullscreen
+    SDL_DisplayMode displayMode;
+    SDL_GetCurrentDisplayMode(0, &displayMode);
+    windowWidth = displayMode.w;
+    windowHeight = displayMode.h;
+
     //next create a pointer called window of type SDL_Window which points to a function called SDL_CreateWindow
     //first parameter is the title.  In the below case I used NULL to indicate no title
     window = SDL_CreateWindow(
         NULL,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        800,
-        600,
+        windowWidth,
+        windowHeight,
         SDL_WINDOW_BORDERLESS
         );
         if (!window)
@@ -44,11 +50,19 @@ void Game::Initialize()
         std::cerr << "Error creating renderer" << std::endl;
         return;
     }
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+
     isRunning = true;
+}
+
+void Game::Setup()
+{
+    // TODO: Initialize game objects
 }
 
 void Game::Run()
 {
+    Setup();
     while(isRunning)
     {
         ProcessInput();
@@ -84,8 +98,14 @@ void Game::Update()
 
 void Game::Render()
 {
-    SDL_SetRenderDrawColor(renderer, 255, 0 , 0, 255);
+    SDL_SetRenderDrawColor(renderer, 21, 21 , 21, 255);
     SDL_RenderClear(renderer);
+
+    //Draw a rectangle
+    //params - position left, position right, width, height
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_Rect player = { 10, 10, 20, 20 };
+    SDL_RenderFillRect(renderer, &player);
 
     SDL_RenderPresent(renderer);
 }
